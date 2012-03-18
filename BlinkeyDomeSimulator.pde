@@ -7,7 +7,7 @@ import damkjer.ocd.*;
 import processing.opengl.*;
 
 int PIXELS_PER_FOOT = 10;
-int DOME_RADIUS = 8;
+int DOME_RADIUS = 8*10;
 float rho = DOME_RADIUS;
 float factor = TWO_PI / 20.0;
 float x, y, z;
@@ -20,9 +20,12 @@ PeasyCam pCamera;
 void setup() {
   size(1024,1024,OPENGL);
   //cam = new Camera(this,10);
-  pCamera = new PeasyCam(this, 150);
-  pCamera.setMinimumDistance(150*1);
+  pCamera = new PeasyCam(this, 0,0,10,200);
+  pCamera.setMinimumDistance(1);
   pCamera.setMaximumDistance(150*10);
+  pCamera.setSuppressRollRotationMode();
+  pCamera.rotateX(0.2);
+  pCamera.lookAt(0,-10,-20);
 
 }
 
@@ -60,9 +63,9 @@ void draw() {
     endShape(CLOSE);
   }
 
-  stroke(100,255,100);
-  fill(50,200,50);
-  box(PIXELS_PER_FOOT * 32, 1, PIXELS_PER_FOOT * 32);
+  //stroke(100,255,100);
+  //fill(50,200,50);
+  //box(PIXELS_PER_FOOT * 32, 1, PIXELS_PER_FOOT * 32);
   
   if (keyPressed) {
     if (key == 'w') {
