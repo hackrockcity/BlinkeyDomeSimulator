@@ -1,12 +1,14 @@
 import damkjer.ocd.*;
 import processing.opengl.*;
 
-int PIXELS_PER_FOOT = 24;
+int PIXELS_PER_FOOT = 10;
+int DOME_RADIUS = 8;
 Camera cam;
 
 void setup() {
   size(1024,1024,OPENGL);
-  cam = new Camera(this,0,height/2-PIXELS_PER_FOOT*5,PIXELS_PER_FOOT*2);
+  cam = new Camera(this,500);
+
 }
 
 void draw() {
@@ -16,7 +18,7 @@ void draw() {
   stroke(255,100,100);
   fill(200,50,50);
   lights();
-  translate(width/2, height/2, 0);
+  //translate(width/2, height/2, 0);
   
   // Sphere is messed up. This is a workaround See:
   // http://forum.processing.org/topic/3d-sphere-issue
@@ -25,7 +27,6 @@ void draw() {
   sphere(1);  
   popMatrix();
 
-  
   stroke(100,255,100);
   fill(50,200,50);
   box(PIXELS_PER_FOOT * 32, 1, PIXELS_PER_FOOT * 32);
@@ -48,6 +49,6 @@ void draw() {
 }
 
 void mouseMoved() {
-  cam.pan(radians(mouseX - pmouseX) / 2.0);
-  cam.tilt(-radians(mouseY - pmouseY) / 2.0);
+  cam.pan(radians(mouseX - pmouseX) / 10.0);
+  cam.tilt(radians(mouseY - pmouseY) / 10.0);
 }
