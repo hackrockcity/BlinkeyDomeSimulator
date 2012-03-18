@@ -17,7 +17,15 @@ void draw() {
   fill(200,50,50);
   lights();
   translate(width/2, height/2, 0);
-  sphere(PIXELS_PER_FOOT * 16);  
+  
+  // Sphere is messed up. This is a workaround See:
+  // http://forum.processing.org/topic/3d-sphere-issue
+  pushMatrix();
+  scale(PIXELS_PER_FOOT * 16);
+  sphere(1);  
+  popMatrix();
+
+  
   stroke(100,255,100);
   fill(50,200,50);
   box(PIXELS_PER_FOOT * 32, 1, PIXELS_PER_FOOT * 32);
