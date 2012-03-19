@@ -19,6 +19,7 @@ void setup() {
   pCamera.setSuppressRollRotationMode();
   pCamera.rotateX(0.2);
   pCamera.lookAt(0,-10,-20);
+  pCamera.setWheelScale(0.05);
 
 }
 
