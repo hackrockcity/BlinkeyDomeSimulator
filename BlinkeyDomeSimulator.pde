@@ -14,6 +14,8 @@ BlinkeyLights blinkeyLights;
 
 Dome dome;
 
+PFont font;
+
 void setup() {
   size(1024, 1024, OPENGL);
   pCamera = new PeasyCam(this, 0, 0, 10, 200);
@@ -25,6 +27,8 @@ void setup() {
   pCamera.setWheelScale(0.05);
 
   dome = new Dome(DOME_RADIUS);
+  
+  font = loadFont("Serif-24.vlw"); 
 
   blinkeyLights = new BlinkeyLights(DOME_RADIUS, strips, lights_per_strip);
 }
@@ -49,9 +53,27 @@ void draw() {
 
   background(0);
   lights();
-
   dome.draw();
-
   blinkeyLights.draw();
+  
+  pCamera.beginHUD();
+    noLights();
+    fill(255,255,255,200);
+    rect(10,10,width-20,30);
+    textFont(font); 
+    fill(0,0,0);
+    textAlign(CENTER);
+    text("Dome Shit", width/2-20, 32);
+    
+    fill(255,255,255,200);
+    ellipseMode(CENTER);
+    ellipse(120, height/2+225, 200,200);
+  pCamera.endHUD();
+  
+  
+
+ 
+  
+
 }
 
