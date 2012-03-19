@@ -26,8 +26,10 @@ class BlinkeyLights {
     return blinkeyLights.size();
   }
 
-  BlinkeyLight get(int i) {
-    return blinkeyLights.get(i);
+  void update(color[] imageData) {
+    for (int i = 0; i < blinkeyLights.size(); i++) {
+      blinkeyLights.get(i).setColor(imageData[i]);
+    }
   }
 
   void draw() {
@@ -36,3 +38,4 @@ class BlinkeyLights {
     }
   }
 }
+

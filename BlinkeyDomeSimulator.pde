@@ -30,9 +30,9 @@ void setup() {
   pCamera.setWheelScale(0.05);
 
   dome = new Dome(DOME_RADIUS);
-  
+
   font = loadFont("Serif-24.vlw"); 
-  
+
   groundTexture = loadImage("Lost Lake.jpg");
 
   blinkeyLights = new BlinkeyLights(DOME_RADIUS, strips, lights_per_strip);
@@ -41,52 +41,58 @@ void setup() {
 
 int animationStep = 0;
 
-void updateLights() {
-  // Blink the lights
-  for (int i = 0; i < blinkeyLights.size(); i++) {
+color[] GetNextFrame() {
+  int image_size = strips*lights_per_strip;
+
+  color[] imageData = new color[image_size];
+
+  for (int i = 0; i < imageData.length; i++) {
     if (animationStep == i%10) {
-      blinkeyLights.get(i).setColor(color(255, 255, 255));
+      imageData[i] = color(255, 255, 255);
     }
     else {
-      blinkeyLights.get(i).setColor(color(0, 0, 0));
+      imageData[i] = color(0, 0, 0);
     }
   }
   //animationStep = (animationStep+1)%blinkeyLights.size();
   animationStep = (animationStep + 1)%10;
+
+  return imageData;
 }
 
 void draw() {
-  updateLights();
+  color imageData[] = GetNextFrame();
+
+  if (imageData.length != blinkeyLights.size()) {
+    print("Bad frame size received!");
+  }
+  else {
+    blinkeyLights.update(imageData);
+  }
 
   background(0);
   lights();
 
-  stroke(92,51);
-  fill(92,51);
+  stroke(92, 51);
+  fill(92, 51);
   pushMatrix();
-  translate(0,0.5,0);
-  
+  translate(0, 0.5, 0);
+
   beginShape();
   texture(groundTexture);
   textureMode(NORMALIZED);
-  
+
   float bound = DOME_RADIUS*10*4;
-  vertex(-bound, .5, -bound, 0,0);
-  vertex(bound, .5, -bound, 1,0);
-  vertex(bound, .5, bound, 1,1);
-  vertex(-bound, .5, bound, 0,1);
+  vertex(-bound, .5, -bound, 0, 0);
+  vertex(bound, .5, -bound, 1, 0);
+  vertex(bound, .5, bound, 1, 1);
+  vertex(-bound, .5, bound, 0, 1);
   endShape();
   popMatrix();
-  
+
   dome.draw();
   blinkeyLights.draw();
-  
+
   hud.draw();
-  
-  
-
- 
-  
-
 }
 
