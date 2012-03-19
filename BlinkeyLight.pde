@@ -23,9 +23,7 @@ class BlinkeyLight {
       stroke(c);
       fill(c);
       scale(rad);
-      // Sphere is too slow, useless.
-      box(1);
-      //sphere(1);
-    popMatrix();
+      ellipse(0,0,1.5,1.5);
+     popMatrix();
   }
 }
