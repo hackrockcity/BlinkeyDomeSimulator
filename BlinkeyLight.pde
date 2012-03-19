@@ -19,12 +19,13 @@ class BlinkeyLight {
   
   void draw() {
     pushMatrix();
-    translate(x, y, z);
-    stroke(c);
-    fill(c);
-    scale(rad);
-    box(1);
-    //sphere(1);
+      translate(x, y, z);
+      stroke(c);
+      fill(c);
+      scale(rad);
+      // Sphere is too slow, useless.
+      box(1);
+      //sphere(1);
     popMatrix();
   }
 }
