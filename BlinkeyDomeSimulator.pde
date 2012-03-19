@@ -16,6 +16,8 @@ Dome dome;
 
 PFont font;
 
+PImage groundTexture;
+
 void setup() {
   size(1024, 1024, OPENGL);
   pCamera = new PeasyCam(this, 0, 0, 10, 200);
@@ -29,6 +31,8 @@ void setup() {
   dome = new Dome(DOME_RADIUS);
   
   font = loadFont("Serif-24.vlw"); 
+  
+  groundTexture = loadImage("Lost Lake.jpg");
 
   blinkeyLights = new BlinkeyLights(DOME_RADIUS, strips, lights_per_strip);
 }
@@ -59,17 +63,16 @@ void draw() {
   fill(92,51);
   pushMatrix();
   translate(0,0.5,0);
-  PImage a = loadImage("Lost Lake.jpg");
+  
   beginShape();
-  texture(a);
+  texture(groundTexture);
   textureMode(NORMALIZED);
   
-  //box(DOME_RADIUS*10*4, 1, DOME_RADIUS*10*4);
   float bound = DOME_RADIUS*10*4;
-  vertex(-bound, 0, -bound, 0,0);
-  vertex(bound, 0, -bound, 1,0);
-  vertex(bound, 0, bound, 1,1);
-  vertex(-bound, 0, bound, 0,1);
+  vertex(-bound, .5, -bound, 0,0);
+  vertex(bound, .5, -bound, 1,0);
+  vertex(bound, .5, bound, 1,1);
+  vertex(-bound, .5, bound, 0,1);
   endShape();
   popMatrix();
   
