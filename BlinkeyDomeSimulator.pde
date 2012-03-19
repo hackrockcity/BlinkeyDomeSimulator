@@ -34,14 +34,15 @@ int animationStep = 0;
 void updateLights() {
   // Blink the lights
   for (int i = 0; i < blinkeyLights.size(); i++) {
-    if (animationStep == i) {
+    if (animationStep == i%10) {
       blinkeyLights.get(i).setColor(color(255, 255, 255));
     }
     else {
-      blinkeyLights.get(i).setColor(color(0, 0, 255));
+      blinkeyLights.get(i).setColor(color(0, 0, 0));
     }
   }
-  animationStep = (animationStep+1)%blinkeyLights.size();
+  //animationStep = (animationStep+1)%blinkeyLights.size();
+  animationStep = (animationStep + 1)%10;
 }
 
 void draw() {
@@ -50,8 +51,25 @@ void draw() {
   background(0);
   lights();
 
+  stroke(92,51);
+  fill(92,51);
+  pushMatrix();
+  translate(0,0.5,0);
+  PImage a = loadImage("Lost Lake.jpg");
+  beginShape();
+  texture(a);
+  textureMode(NORMALIZED);
+  
+  //box(DOME_RADIUS*10*4, 1, DOME_RADIUS*10*4);
+  float bound = DOME_RADIUS*10*4;
+  vertex(-bound, 0, -bound, 0,0);
+  vertex(bound, 0, -bound, 1,0);
+  vertex(bound, 0, bound, 1,1);
+  vertex(-bound, 0, bound, 0,1);
+  endShape();
+  popMatrix();
+  
   dome.draw();
-
   blinkeyLights.draw();
 }
 
