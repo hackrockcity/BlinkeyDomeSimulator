@@ -18,9 +18,6 @@ class BlinkeyLights {
         float y = radius_ *                cos(inclination);
 
         blinkeyLights.add(new BlinkeyLight(x, y, z));
-
-        // print("inc= " + inclination + ", azi=" + azimuth + "\n");
-        print(x + ", " + y + ", " + z + "\n");
       }
     }
   }

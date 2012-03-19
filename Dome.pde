@@ -13,8 +13,8 @@ class Dome {
   }
   
   void draw() {
-    stroke(255,100,100);
-    fill(200,50,50);
+    stroke(255,100,100,50);
+    fill(200,50,50,0);
   
     for (float phi = 0.0; phi < HALF_PI; phi += factor) {
       beginShape(QUAD_STRIP);
