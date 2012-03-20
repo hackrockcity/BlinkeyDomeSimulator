@@ -1,5 +1,7 @@
 class Hud {
-
+  
+  int boxHeight = 200;
+  
   void draw() {
     pCamera.beginHUD();
       noLights();
@@ -11,8 +13,10 @@ class Hud {
       text("Dome Shit", width/2-20, 32);
       
       fill(255,255,255,200);
-      ellipseMode(CENTER);
-      ellipse(120, height/2+225, 200,200);
+      //ellipseMode(CENTER);
+      //ellipse(120, height/2+225, 200,200);
+      rectMode(CORNER);
+      rect(10, height-boxHeight-10, 400,200);
     pCamera.endHUD();
   }
   

@@ -24,11 +24,11 @@ PFont font;
 PImage groundTexture;
 
 void setup() {
-  //size(1024, 1024, OPENGL);
-    size(1680, 1000, OPENGL);
-  pCamera = new PeasyCam(this, 0, -30, 0, 50);
-  //pCamera.setMinimumDistance(1);
-//  pCamera.setMaximumDistance(150*10);
+  size(1024, 850, OPENGL);
+  //size(1680, 1000, OPENGL);
+  pCamera = new PeasyCam(this, 0, 0, 10, 200);
+  pCamera.setMinimumDistance(1);
+  pCamera.setMaximumDistance(150*10);
   pCamera.setSuppressRollRotationMode();
   pCamera.rotateX(-0.2);
 //  pCamera.lookAt(0, -10, -20);
@@ -36,7 +36,7 @@ void setup() {
   pCamera.setWheelScale(0.05);
 
   newImage = new color[strips*lights_per_strip];
-  
+
   udp = new UDP( this, 58082 );
   udp.listen( true );
 
@@ -44,8 +44,8 @@ void setup() {
   hud = new Hud();
   dome = new Dome(DOME_RADIUS);
   blinkeyLights = new BlinkeyLights(DOME_RADIUS, strips, lights_per_strip);
-  imageHud = new ImageHud(10,10, strips, lights_per_strip);
-  
+  imageHud = new ImageHud(20, height-135-20, strips, lights_per_strip);
+
   groundTexture = loadImage("Lost Lake.jpg");
 }
 
@@ -61,17 +61,17 @@ void receive(byte[] data, String ip, int port) {
     println("Started receiving data from " + ip + ". Demo mode disabled.");
     demoMode = false;
   }
-  
+
   if (data[0] == 1) {
     if (data.length != strips*lights_per_strip*3 + 1) {
-        println("Packet size mismatch. Expected many, got " + data.length);
-        return;
+      println("Packet size mismatch. Expected many, got " + data.length);
+      return;
     }
-    
+
     for (int i=0; i< strips*lights_per_strip; i++) {
-      newImage[i] = color(convertByte(data[i*3 + 1]),
-                          convertByte(data[i*3 + 2]),
-                          convertByte(data[i*3 + 3]));
+      newImage[i] = color(convertByte(data[i*3 + 1]), 
+      convertByte(data[i*3 + 2]), 
+      convertByte(data[i*3 + 3]));
     }
     newData = true;
   }
@@ -106,7 +106,7 @@ void draw() {
     blinkeyLights.update(imageData);
     imageHud.update(imageData);
   }
-  else if(newData) {
+  else if (newData) {
     blinkeyLights.update(newImage);
     imageHud.update(newImage);
     newData = false;
@@ -135,7 +135,9 @@ void draw() {
   dome.draw();
   blinkeyLights.draw();
 
-  //hud.draw();
+
+  noLights();
+  hud.draw();
   imageHud.draw();
 }
 
