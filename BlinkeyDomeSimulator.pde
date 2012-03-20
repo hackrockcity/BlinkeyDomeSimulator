@@ -26,12 +26,13 @@ PImage groundTexture;
 void setup() {
   //size(1024, 1024, OPENGL);
     size(1680, 1000, OPENGL);
-  pCamera = new PeasyCam(this, 0, 0, 10, 200);
-  pCamera.setMinimumDistance(1);
-  pCamera.setMaximumDistance(150*10);
+  pCamera = new PeasyCam(this, 0, -30, 0, 50);
+  //pCamera.setMinimumDistance(1);
+//  pCamera.setMaximumDistance(150*10);
   pCamera.setSuppressRollRotationMode();
-  pCamera.rotateX(0.2);
-  pCamera.lookAt(0, -10, -20);
+  pCamera.rotateX(-0.2);
+//  pCamera.lookAt(0, -10, -20);
+//  pCamera.rotateY(-HALF_PI);
   pCamera.setWheelScale(0.05);
 
   newImage = new color[strips*lights_per_strip];
@@ -131,10 +132,10 @@ void draw() {
   endShape();
   popMatrix();
 
-  //dome.draw();
+  dome.draw();
   blinkeyLights.draw();
 
   //hud.draw();
-  //imageHud.draw();
+  imageHud.draw();
 }
 
