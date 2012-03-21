@@ -22,8 +22,9 @@ class BlinkeyLight {
       translate(x, y, z);
       stroke(c);
       fill(c);
-      scale(rad);
-      ellipse(0,0,1.5,1.5);
+      //scale(rad);
+      //ellipse(0,0,1.5,1.5);
+      point(0,0);
      popMatrix();
   }
 }
