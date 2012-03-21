@@ -23,7 +23,10 @@ class BlinkeyLight {
       stroke(c);
       fill(c);
       scale(rad);
-      ellipse(0,0,1.5,1.5);
+      rect(-.5,-.5,.5,.5);
+      //ellipse(0,0,1.5,1.5);
+      //sphereDetail(3);
+      //sphere(.3);
      popMatrix();
   }
 }
