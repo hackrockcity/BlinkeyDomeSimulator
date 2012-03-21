@@ -14,6 +14,7 @@ class Dome {
   
   void draw() {
     stroke(255,100,100,50);
+    strokeWeight(1);
     noFill();//fill(200,50,50,0);
   
     for (float phi = 0.0; phi < HALF_PI; phi += factor) {
