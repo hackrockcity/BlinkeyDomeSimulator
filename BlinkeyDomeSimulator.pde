@@ -35,11 +35,13 @@ void setup() {
 //  pgl.endGL(); //end opengl
   
   //size(1680, 1000, OPENGL);
-  pCamera = new PeasyCam(this, 0, 0, 10, 200);
+  pCamera = new PeasyCam(this, 0, 0, 0, 200);
   pCamera.setMinimumDistance(1);
   pCamera.setMaximumDistance(150*10);
   pCamera.setSuppressRollRotationMode();
-  pCamera.rotateX(-0.2);
+  pCamera.rotateX(.6);
+
+
   //  pCamera.lookAt(0, -10, -20);
   //  pCamera.rotateY(-HALF_PI);
   pCamera.setWheelScale(0.05);
