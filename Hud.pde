@@ -1,6 +1,11 @@
 class Hud {
   
   int boxHeight = 155;
+  String hudText = new String("Dome Shit");
+  
+  void setHudText(String newText) {
+    hudText = newText;
+  }
   
   void draw() {
     pCamera.beginHUD();
@@ -11,7 +16,7 @@ class Hud {
       textFont(font); 
       fill(0,0,0);
       textAlign(CENTER);
-      text("Dome Shit", width/2-20, 32);
+      text(hudText, width/2-20, 32);
       fill(255,255,255,100);
       rectMode(CORNER);
       rect(10, height-boxHeight-10, 45,boxHeight);

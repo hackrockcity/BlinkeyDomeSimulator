@@ -2,7 +2,7 @@ import peasy.org.apache.commons.math.*;
 import peasy.*;
 import peasy.org.apache.commons.math.geometry.*;
 import processing.opengl.*;
-//import javax.media.opengl.GL;
+import javax.media.opengl.GL;
 import hypermedia.net.*;
 
 import java.util.concurrent.*;
@@ -12,7 +12,9 @@ int strips = 25;               // Number of strips around the circumference of t
 int lights_per_strip = 45*3;    // Number of lights along the strip
 
 Boolean demoMode = true;
-LinkedBlockingQueue newImageQueue;
+BlockingQueue newImageQueue;
+
+DemoTransmitter demoTransmitter;
 
 UDP udp;
 
@@ -28,25 +30,23 @@ PImage groundTexture;
 void setup() {
   size(1024, 850, OPENGL);
   frameRate(60);
-  
-//  PGraphicsOpenGL pgl = (PGraphicsOpenGL) g; //processing graphics object
-//  GL gl = pgl.beginGL(); //begin opengl
-//  gl.setSwapInterval(2); //set vertical sync on
-//  pgl.endGL(); //end opengl
-  
+
+  // Turn on vsync to prevent tearing
+  PGraphicsOpenGL pgl = (PGraphicsOpenGL) g; //processing graphics object
+  GL gl = pgl.beginGL(); //begin opengl
+  gl.setSwapInterval(2); //set vertical sync on
+  pgl.endGL(); //end opengl
+
   //size(1680, 1000, OPENGL);
   pCamera = new PeasyCam(this, 0, 0, 0, 200);
-  pCamera.setMinimumDistance(1);
+  pCamera.setMinimumDistance(.2);
   pCamera.setMaximumDistance(150*10);
   pCamera.setSuppressRollRotationMode();
   pCamera.rotateX(.6);
 
-
-  //  pCamera.lookAt(0, -10, -20);
-  //  pCamera.rotateY(-HALF_PI);
   pCamera.setWheelScale(0.05);
 
-  newImageQueue = new LinkedBlockingQueue();
+  newImageQueue = new ArrayBlockingQueue(2);
 
   udp = new UDP( this, 58082 );
   udp.listen( true );
@@ -58,6 +58,9 @@ void setup() {
   imageHud = new ImageHud(20, height-135-20, strips, lights_per_strip);
 
   groundTexture = loadImage("Lost Lake.jpg");
+
+  demoTransmitter = new DemoTransmitter();
+  demoTransmitter.start();
 }
 
 int animationStep = 0;
@@ -71,6 +74,13 @@ void receive(byte[] data, String ip, int port) {
   if (demoMode) {
     println("Started receiving data from " + ip + ". Demo mode disabled.");
     demoMode = false;
+  }
+  
+  if (data[0] == 2) {
+    // We got a new mode, so copy it out
+    String modeName = new String(data);
+    hud.setHudText(modeName);
+    return;
   }
 
   if (data[0] != 1) {
@@ -89,9 +99,10 @@ void receive(byte[] data, String ip, int port) {
   }
 
   color[] newImage = new color[strips*lights_per_strip];
-  
+
   for (int i=0; i< strips*lights_per_strip; i++) {
-    newImage[i] = color(convertByte(data[i*3 + 1]), 
+    newImage[i] = color(
+    convertByte(data[i*3 + 1]), 
     convertByte(data[i*3 + 2]), 
     convertByte(data[i*3 + 3]));
   }
@@ -104,70 +115,62 @@ void receive(byte[] data, String ip, int port) {
   }
 }
 
-color[] MakeDemoFrame() {
-  int image_size = strips*lights_per_strip;
+void drawGround() {
+  stroke(92, 51);
+  fill(92, 51);
+  
+  int tilefactor = 10;
+  float bound = DOME_RADIUS*10*4;
 
-  color[] imageData = new color[image_size];
-
-  for (int i = 0; i < imageData.length; i++) {
-    if (animationStep == i%10) {
-      imageData[i] = color(255, 255, 255);
-    }
-    else {
-      imageData[i] = color(0, 0, 0);
+  for (int x = 0; x < tilefactor; x++) {
+    for (int y = 0; y < tilefactor; y++) {
+      pushMatrix();
+      translate(0, 0.5, 0);
+      
+      translate(bound/tilefactor*x-bound/2, 0, bound/tilefactor*y-bound/2);
+      
+      beginShape();
+      texture(groundTexture);
+      textureMode(NORMALIZED);
+      
+      vertex(0,                .5, 0,                0, 0);
+      vertex(bound/tilefactor, .5, 0,                1, 0);
+      vertex(bound/tilefactor, .5, bound/tilefactor, 1, 1);
+      vertex(0,                .5, bound/tilefactor, 0, 1);
+      endShape();
+      popMatrix();
     }
   }
-  //animationStep = (animationStep+1)%blinkeyLights.size();
-  animationStep = (animationStep + 1)%10;
+}
 
-  return imageData;
+void drawFPS() {
+  pCamera.beginHUD();
+  noLights();
+  fill(255, 255, 255);
+  textFont(font);
+  textAlign(CENTER);
+  text(int(frameRate), width - 50, height - 50);
+  pCamera.endHUD();
 }
 
 void draw() {
-  if (demoMode) {
-    color imageData[] = MakeDemoFrame();
-    blinkeyLights.update(imageData);
-    imageHud.update(imageData);
-  }
-  else if (newImageQueue.size() > 0) {
-    color[] newImage = (color[]) newImageQueue.poll();
-
-    blinkeyLights.update(newImage);
-    imageHud.update(newImage);
-  }
-
   background(0);
   lights();
 
-  stroke(92, 51);
-  fill(92, 51);
-  pushMatrix();
-  translate(0, 0.5, 0);
-
-  beginShape();
-  texture(groundTexture);
-  textureMode(NORMALIZED);
-
-  float bound = DOME_RADIUS*10*4;
-  vertex(-bound, .5, -bound, 0, 0);
-  vertex(bound, .5, -bound, 1, 0);
-  vertex(bound, .5, bound, 1, 1);
-  vertex(-bound, .5, bound, 0, 1);
-  endShape();
-  popMatrix();
+  drawGround();
 
   dome.draw();
   blinkeyLights.draw();
 
   hud.draw();
   imageHud.draw();
+
+  drawFPS();
   
-  pCamera.beginHUD();
-    noLights();
-    fill(255,255,255);
-    textFont(font);
-    textAlign(CENTER);
-    text(int(frameRate),width - 50, height - 50);
-  pCamera.endHUD();
+  if (newImageQueue.size() > 0) {
+    color[] newImage = (color[])newImageQueue.remove();
+    blinkeyLights.update(newImage);
+    imageHud.update(newImage);
+  }
 }
 
