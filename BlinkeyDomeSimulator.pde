@@ -9,7 +9,8 @@ import java.util.concurrent.*;
 
 int DOME_RADIUS = 8;
 int strips = 25;               // Number of strips around the circumference of the sphere
-int lights_per_strip = 45*3;    // Number of lights along the strip
+int lights_per_strip = 32*5;    // Number of lights along the strip
+int packet_length = strips*lights_per_strip*3 + 1;
 
 Boolean demoMode = true;
 BlockingQueue newImageQueue;
@@ -29,6 +30,7 @@ PImage groundTexture;
 
 void setup() {
   size(1024, 850, OPENGL);
+  colorMode(RGB,255);
   frameRate(60);
 
   // Turn on vsync to prevent tearing
@@ -55,7 +57,7 @@ void setup() {
   hud = new Hud();
   dome = new Dome(DOME_RADIUS);
   blinkeyLights = new BlinkeyLights(DOME_RADIUS, strips, lights_per_strip);
-  imageHud = new ImageHud(20, height-135-20, strips, lights_per_strip);
+  imageHud = new ImageHud(20, height-160-20, strips, lights_per_strip);
 
   groundTexture = loadImage("Lost Lake.jpg");
 
@@ -65,8 +67,17 @@ void setup() {
 
 int animationStep = 0;
 
+int maxConvertedByte = 0;
+
 int convertByte(byte b) {
-  return (b<0) ? 256+b : b;
+  int c = (b<0) ? 256+b : b;
+
+  if (c > maxConvertedByte) {
+    maxConvertedByte = c;
+    println("Max Converted Byte is now " + c);
+  }  
+  
+  return c;
 }
 
 void receive(byte[] data, String ip, int port) {  
@@ -88,8 +99,8 @@ void receive(byte[] data, String ip, int port) {
     return;
   }
 
-  if (data.length != strips*lights_per_strip*3 + 1) {
-    println("Packet size mismatch. Expected many, got " + data.length);
+  if (data.length != packet_length) {
+    println("Packet size mismatch. Expected "+packet_length+", got " + data.length);
     return;
   }
 
@@ -101,12 +112,12 @@ void receive(byte[] data, String ip, int port) {
   color[] newImage = new color[strips*lights_per_strip];
 
   for (int i=0; i< strips*lights_per_strip; i++) {
-    newImage[i] = color(
-    convertByte(data[i*3 + 1]), 
-    convertByte(data[i*3 + 2]), 
-    convertByte(data[i*3 + 3]));
+      // Processing doesn't like it when you call the color function while in an event
+      // go figure
+      newImage[i] = (int)(0xff<<24 | convertByte(data[i*3 + 1])<<16) |
+            (convertByte(data[i*3 + 2])<<8) |
+            (convertByte(data[i*3 + 3]));
   }
-
   try { 
     newImageQueue.put(newImage);
   } 
