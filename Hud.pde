@@ -1,7 +1,7 @@
 class Hud {
   
   int boxHeight = 155;
-  String hudText = new String("Dome Shit");
+  String hudText = new String("Dome Scheiße");
   
   void setHudText(String newText) {
     hudText = newText;

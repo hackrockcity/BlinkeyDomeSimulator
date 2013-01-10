@@ -8,12 +8,14 @@ import hypermedia.net.*;
 import java.util.concurrent.*;
 
 int DOME_RADIUS = 8;
-int strips = 25;               // Number of strips around the circumference of the sphere
+int strips = 40;               // Number of strips around the circumference of the sphere
 int lights_per_strip = 32*5;    // Number of lights along the strip
 int packet_length = strips*lights_per_strip*3 + 1;
 
 Boolean demoMode = true;
 BlockingQueue newImageQueue;
+
+color[][] frameBuffer;
 
 DemoTransmitter demoTransmitter;
 
@@ -29,22 +31,22 @@ PFont font;
 PImage groundTexture;
 
 void setup() {
-  size(1024, 850, OPENGL);
+  size(1024/2, 850/2, OPENGL);
   colorMode(RGB,255);
   frameRate(60);
 
   // Turn on vsync to prevent tearing
   PGraphicsOpenGL pgl = (PGraphicsOpenGL) g; //processing graphics object
   GL gl = pgl.beginGL(); //begin opengl
-  gl.setSwapInterval(2); //set vertical sync on
+  gl.setSwapInterval(0); //set vertical sync on
   pgl.endGL(); //end opengl
 
   //size(1680, 1000, OPENGL);
-  pCamera = new PeasyCam(this, 0, 0, 0, 200);
+  pCamera = new PeasyCam(this, 0, -50, 0, 100);
   pCamera.setMinimumDistance(.2);
   pCamera.setMaximumDistance(150*10);
   pCamera.setSuppressRollRotationMode();
-  pCamera.rotateX(.6);
+  pCamera.rotateX(-.4);
 
   pCamera.setWheelScale(0.05);
 
@@ -123,7 +125,7 @@ void receive(byte[] data, String ip, int port) {
   } 
   catch( InterruptedException e ) {
     println("Interrupted Exception caught");
-  }
+  }  
 }
 
 void drawGround() {
