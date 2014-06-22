@@ -9,10 +9,10 @@ class DemoTransmitter extends Thread {
   
     for (int i = 0; i < imageData.length; i++) {
       if (animationStep == i%10) {
-        imageData[i] = color(255, 255, 255);
+        imageData[i] = color(255);
       }
       else {
-        imageData[i] = color(0, 0, 0);
+        imageData[i] = color(0);
       }
     }
     

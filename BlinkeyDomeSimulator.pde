@@ -4,8 +4,9 @@ import peasy.org.apache.commons.math.geometry.*;
 import processing.opengl.*;
 import javax.media.opengl.GL;
 import hypermedia.net.*;
-
 import java.util.concurrent.*;
+import javax.media.opengl.GL2;
+
 
 int DOME_RADIUS = 8;
 int strips = 40;               // Number of strips around the circumference of the sphere
@@ -14,13 +15,10 @@ int packet_length = strips*lights_per_strip*3 + 1;
 
 Boolean demoMode = true;
 BlockingQueue newImageQueue;
-
 color[][] frameBuffer;
 
 DemoTransmitter demoTransmitter;
-
 UDP udp;
-
 PeasyCam pCamera;
 BlinkeyLights blinkeyLights;
 Dome dome;
@@ -37,9 +35,9 @@ void setup() {
 
   // Turn on vsync to prevent tearing
   PGraphicsOpenGL pgl = (PGraphicsOpenGL) g; //processing graphics object
-  GL gl = pgl.beginGL(); //begin opengl
+  GL2 gl = ((PJOGL)((PGraphicsOpenGL)g).beginPGL()).gl.getGL2(); //begin opengl
   gl.setSwapInterval(0); //set vertical sync on
-  pgl.endGL(); //end opengl
+  pgl.endPGL(); //end opengl
 
   //size(1680, 1000, OPENGL);
   pCamera = new PeasyCam(this, 0, -50, 0, 100);
@@ -107,7 +105,7 @@ void receive(byte[] data, String ip, int port) {
   }
 
   if (newImageQueue.size() > 0) {
-    println("Buffer full, dropping frame!");
+    //println("Buffer full, dropping frame!");
     return;
   }
 
@@ -144,7 +142,7 @@ void drawGround() {
       
       beginShape();
       texture(groundTexture);
-      textureMode(NORMALIZED);
+      textureMode(NORMAL);
       
       vertex(0,                .5, 0,                0, 0);
       vertex(bound/tilefactor, .5, 0,                1, 0);

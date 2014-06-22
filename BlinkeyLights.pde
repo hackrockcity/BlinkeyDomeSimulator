@@ -10,7 +10,6 @@ class BlinkeyLights {
     for (int light = lights_per_strip_ -1; light > 0; light--) {
       for (int strip = 0; strip < strips_; strip++) {  
 
-
         float inclination = HALF_PI + (HALF_PI)*((float)light/lights_per_strip_);
         float azimuth     = (2*PI)*((float)strip/strips_);
 
