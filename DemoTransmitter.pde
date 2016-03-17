@@ -31,7 +31,7 @@ class DemoTransmitter extends Thread {
           color imageData[] = MakeDemoFrame();
           newImageQueue.put(imageData);
         }
-        Thread.sleep(0);
+        Thread.sleep(25);
       } 
       catch( InterruptedException e ) {
         println("Interrupted Exception caught");

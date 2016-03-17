@@ -1,7 +1,11 @@
-Simulates our blinkey dome
 
-Requires the following libraries:
+
+## Requirements
 
 * [Peasycam](http://mrfeinberg.com/peasycam/)
 * [Hypermedia.net UDP](http://ubaa.net/shared/processing/udp/)
-* [HRC domeTransmitter](https://github.com/hackrockcity/domeTransmitter)
+
+## DomeStar Protocol
+
+The dome listens for UDP packets on port 58082.  Send a 1 followed by 
+19,200 bytes of RGB data.

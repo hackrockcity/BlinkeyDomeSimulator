@@ -2,10 +2,8 @@ import peasy.org.apache.commons.math.*;
 import peasy.*;
 import peasy.org.apache.commons.math.geometry.*;
 import processing.opengl.*;
-import javax.media.opengl.GL;
 import hypermedia.net.*;
 import java.util.concurrent.*;
-import javax.media.opengl.GL2;
 
 
 int DOME_RADIUS = 8;
@@ -29,17 +27,10 @@ PFont font;
 PImage groundTexture;
 
 void setup() {
-  size(1024/2, 850/2, OPENGL);
+  size(512, 425, P3D);
   colorMode(RGB,255);
   frameRate(60);
 
-  // Turn on vsync to prevent tearing
-  PGraphicsOpenGL pgl = (PGraphicsOpenGL) g; //processing graphics object
-  GL2 gl = ((PJOGL)((PGraphicsOpenGL)g).beginPGL()).gl.getGL2(); //begin opengl
-  gl.setSwapInterval(0); //set vertical sync on
-  pgl.endPGL(); //end opengl
-
-  //size(1680, 1000, OPENGL);
   pCamera = new PeasyCam(this, 0, -50, 0, 100);
   pCamera.setMinimumDistance(.2);
   pCamera.setMaximumDistance(150*10);
@@ -81,7 +72,6 @@ int convertByte(byte b) {
 }
 
 void receive(byte[] data, String ip, int port) {  
-  //println(" new datas!");
   if (demoMode) {
     println("Started receiving data from " + ip + ". Demo mode disabled.");
     demoMode = false;
@@ -184,4 +174,3 @@ void draw() {
     imageHud.update(newImage);
   }
 }
-
