@@ -6,7 +6,7 @@ import hypermedia.net.*;
 import java.util.concurrent.*;
 
 
-int DOME_RADIUS = 8;
+int DOME_RADIUS = 12;
 int strips = 40;               // Number of strips around the circumference of the sphere
 int lights_per_strip = 32*5;    // Number of lights along the strip
 int packet_length = strips*lights_per_strip*3 + 1;
